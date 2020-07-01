@@ -6,7 +6,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import Flights.Flight;
+
 
 public class Test4 {
 	/*

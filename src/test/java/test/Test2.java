@@ -1,34 +1,41 @@
 /*
  * package test;
  * 
- * import org.junit.After; import org.junit.Before; import org.junit.Test;
  * 
- * import homePage.HomePage;
+ * 
+ * import org.junit.After; import org.junit.Before; import org.junit.Test;
+ * import org.openqa.selenium.WebDriver; import
+ * org.openqa.selenium.chrome.ChromeDriver;
+ * 
+ * import Flights.Flight; import PageObjects.ClassPageObject; import
+ * io.github.bonigarcia.wdm.WebDriverManager;
  * 
  * public class Test2 {
  * 
- * 
- * HomePage homepage;
+ * Flight f; WebDriver driver;
  * 
  * @Before public void before() {
  * 
  * 
- * homepage = new HomePage(); }
+ * WebDriverManager.chromedriver().setup(); driver = new ChromeDriver();
+ * 
+ * f = new Flight(driver);
+ * 
+ * }
+ * 
+ * @Test public void test() { f.selectMultiDestinationTrip();
+ * f.selectOrigin("Londres",0); f.selectDestination("Brasil",0);
+ * f.swapAirports(0); f.selectDepartureDate(15,0);
  * 
  * 
- * @Test public void test() {
+ * f.addAdultPassenger(3); f.substractAdultPassenger();
+ * f.selectClass(ClassPageObject.Classes.Turista); f.search();
  * 
+ * }
  * 
- * homepage.selectOrigin("Buenos Aires"); homepage.selectDestination("Berlin");
- * homepage.selectNoDate(true); homepage.search(); }
+ * @After public void close() {
  * 
- * @After
- * 
- * public void close() { homepage.close(); }
- * 
- * 
- * 
- * 
+ * f.close(); }
  * 
  * }
  */

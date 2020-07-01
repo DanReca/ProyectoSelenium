@@ -5,14 +5,16 @@ package Flights;
 
 import org.openqa.selenium.WebDriver;
 
-
 import PageObjects.AirportPageObject;
 import PageObjects.CalendarPageObject;
 import PageObjects.ClassPageObject;
 import PageObjects.ClassPageObject.Classes;
+import PageObjects.HomePageObject;
 import PageObjects.PassengersPageObject;
 import PageObjects.PassengersPageObject.Age;
-import PageObjects.SearchPageObject;
+
+
+
 
 
 public class Flight {
@@ -23,7 +25,7 @@ public class Flight {
 	private CalendarPageObject date;
 	private AirportPageObject airport;
 	private ClassPageObject classes;
-private SearchPageObject search;
+private HomePageObject home;
 
 
 	public Flight(WebDriver driver) {
@@ -34,21 +36,21 @@ private SearchPageObject search;
 		this.airport = new AirportPageObject(driver);
 		this.date = new CalendarPageObject(driver);
 		this.classes = new ClassPageObject(driver);
-		this.search= new SearchPageObject(driver);
+		this.home= new HomePageObject(driver);
 		driver.get("https://almundo.com.ar/");
 		driver.manage().window().maximize();
 
 	}
 
-	public void selectOrigin(String city) {
+	public void selectOrigin(String city, int indexOfFlight) {
 
-		this.airport.setOrigin(city);
+		this.airport.setOrigin(city,indexOfFlight);
 
 	}
 
-	public void selectDestination(String city) {
+	public void selectDestination(String city, int indexOfFlight) {
 
-		this.airport.setDestination(city);
+		this.airport.setDestination(city, indexOfFlight);
 
 	}
 
@@ -58,9 +60,9 @@ private SearchPageObject search;
 
 	}
 
-	public void selectDepartureDate(int days) {
+	public void selectDepartureDate(int days, int indexOfFlight) {
 
-		this.date.selectDepartureDate(days);
+		this.date.selectDepartureDate(days, indexOfFlight);
 
 	}
 
@@ -72,8 +74,7 @@ private SearchPageObject search;
 
 	public void selectDepartureAndArrivalDate(int daysDeparture, int daysArrival) {
 
-		selectDepartureDate(daysDeparture);
-		selectArrivalDate(daysArrival);
+		this.date.selectDepartureAndArrivalDate(daysDeparture, daysArrival);
 	}
 
 	public void selectNoDate(boolean b) {
@@ -107,12 +108,12 @@ private SearchPageObject search;
 	}
 
 
-	public void addChildPassenger(Age age) {
+	public void addChildPassenger(Age age) throws InterruptedException {
 		this.passenger.addChildPassenger(age);
 
 	}
 	
-	public void addChildPassenger(int qty, Age [] age) {
+	public void addChildPassenger(int qty, Age [] age) throws InterruptedException {
 		
 		this.passenger.addChildPassenger(qty, age);
 
@@ -136,12 +137,40 @@ private SearchPageObject search;
 		this.passenger.modifyChildAge(childNumber, age);
 	}
 
+	public void swapAirports(int indexOfFlight) {
+	
+		this.airport.swapAirports(indexOfFlight);
+	}
 	
 	
 	public void search() {
 
-		this.search.search();
+		this.home.search();
 	}
+	
+	public void selectRoundTrip() {
+
+	this.home.selectRoundTrip();
+	}
+
+	public void selectOneWayTrip() {
+	
+		this.home.selectOneWayTrip();
+	}
+
+	public void selectMultiDestinationTrip() {
+		
+		this.home.selectMultiDestinationTrip();
+	}
+	
+	
+
+	public void addFlight() {
+
+		this.home.addFlight();
+	}
+	
+	
 	
 	
 	public void close() {

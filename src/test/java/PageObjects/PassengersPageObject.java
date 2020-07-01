@@ -3,6 +3,7 @@ package PageObjects;
 import java.time.Duration;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -60,11 +61,19 @@ public class PassengersPageObject {
 
 	}
 
-	private void addChild(Age age) {
+	private void addChild(Age age) n {
 
 		operation(2, true);
 		this.childQTY++;
-		selectChildAge(childQTY, age.getValue());
+		
+	System.out.println(childQTY);
+	
+
+				selectChildAge(childQTY, age.getValue());
+		
+		
+		
+		
 	}
 
 	private void substractAdult() {
@@ -89,6 +98,7 @@ public class PassengersPageObject {
 	private void clickOK() {
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
 		wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(okButton)));
+		
 		this.driver.findElement(By.cssSelector(this.okButton)).click();
 
 	}
@@ -105,17 +115,15 @@ public class PassengersPageObject {
 
 	}
 
-	private void selectChildAge(int minorNum, int age) {
-
-		String strNumber = this.driver.findElement(By.cssSelector(this.minorAge)).getText();
-		int number = Integer.parseInt(strNumber);
+	private void selectChildAge(int numberOfChildField, int age) {
+		
+	
+	
 		String aux;
 
-		if (number >= minorNum) {
-
-			aux = selectAgeMenu(minorNum);
+			aux = selectAgeMenu(numberOfChildField);
 			selectAge(aux, age);
-		}
+	
 
 	}
 
@@ -127,42 +135,41 @@ public class PassengersPageObject {
 
 		case 1:
 			minorAge = this.minorAge1;
-
 			break;
 
 		case 2:
 			minorAge = this.minorAge2;
-
+			
 			break;
 
 		case 3:
 			minorAge = this.minorAge3;
-
+		
 			break;
 
 		case 4:
 			minorAge = this.minorAge4;
-
+			
 			break;
 
 		case 5:
 			minorAge = this.minorAge5;
-
+			
 			break;
 
 		case 6:
 			minorAge = this.minorAge6;
-
+			
 			break;
 
 		case 7:
 			minorAge = this.minorAge7;
-
+			
 			break;
 
 		case 8:
 			minorAge = this.minorAge8;
-
+			
 			break;
 
 		}
@@ -179,21 +186,26 @@ public class PassengersPageObject {
 
 		case 0:
 			selector = field + this.minorThanTwo;
-
+		
 			break;
 
 		case 1:
 			selector = field + this.majTwoMinEleven;
+		
 			break;
 
 		case 2:
 			selector = field + this.majorThanEleven;
+		
 			break;
 
 		}
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
 		wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(selector)));
+	
 		this.driver.findElement(By.cssSelector(selector)).click();
+		this.driver.findElement(By.cssSelector("#cdk-overlay-0")).click();
+		
 
 	}
 
@@ -229,7 +241,7 @@ public class PassengersPageObject {
 		}
 	}
 
-	public void addChildPassenger(Age age) {
+	public void addChildPassenger(Age age) throws InterruptedException {
 
 		selectPassengerField();
 
@@ -240,7 +252,7 @@ public class PassengersPageObject {
 	}
 	
 	
-	public void addChildPassenger(int qty, Age age []) {
+	public void addChildPassenger(int qty, Age age []) throws InterruptedException {
 
 		selectPassengerField();
 
@@ -278,7 +290,7 @@ public class PassengersPageObject {
 	
 	public void modifyChildAge(int childNumber, Age age) {
 		selectPassengerField();
-		selectChildAge(childNumber, age.getValue());
+		selectChildAge(childNumber,age.getValue());
 		clickOK();
 	}
 

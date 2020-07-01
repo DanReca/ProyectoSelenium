@@ -17,7 +17,7 @@ public class AirportPageObject {
 	private final String destination = "#flight-to";
 	private final String option = "div:nth-child(2) > div.autocomplete_items"; 
 private final String undefinedDestination = ".flights-searchbox__form-inputs-group-location .mb-checkbox__mark";
-	
+private final String swapButton= "#airplane";	
 	 private WebDriver driver;	
 	
 	 private boolean undefDestination;
@@ -30,29 +30,35 @@ private final String undefinedDestination = ".flights-searchbox__form-inputs-gro
  }
  
  
- private void setAirport (String field, String city) {
+ private void setAirport (String field, String city, int indexOfFlight) {
 	 
 	WebDriverWait wait= new WebDriverWait(driver, Duration.ofSeconds(5));
 	 
-	 this.driver.findElement(By.cssSelector(field)).click();
-	 this.driver.findElement(By.cssSelector(field)).sendKeys(city); 
+	 this.driver.findElements(By.cssSelector(field)).get(indexOfFlight).click();
+	 this.driver.findElements(By.cssSelector(field)).get(indexOfFlight).sendKeys(city); 
 	 wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(this.option)));
 	 this.driver.findElement(By.cssSelector(this.option)).click(); 
 	 
  }
  
- public void setOrigin(String city) {
+ public void setOrigin(String city, int indexOfFlight) {
 	 
 	 
-	 setAirport(this.origin, city);
+	 setAirport(this.origin, city, indexOfFlight);
  }
 	
  
- public void setDestination( String city) {
+ public void setDestination( String city, int indexOfFlight) {
 	 
 	 
-	 setAirport( this.destination, city);
+	 setAirport( this.destination, city, indexOfFlight);
  }
+ 
+ 
+ 
+
+ 
+ 
  
  public void exploreWithoutDestination(boolean b) {
 	 
@@ -71,7 +77,11 @@ private final String undefinedDestination = ".flights-searchbox__form-inputs-gro
 		 
 	 }
 	 
-	 
+	 public void swapAirports(int indexOfFlight) {
+		 
+		 this.driver.findElements(By.cssSelector(swapButton)).get(indexOfFlight).click();
+		 
+	 }
  }
  
 
