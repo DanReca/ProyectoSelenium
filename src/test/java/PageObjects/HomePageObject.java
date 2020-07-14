@@ -1,42 +1,54 @@
 package PageObjects;
 
 import java.time.Duration;
+import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class HomePageObject {
+public class HomePageObject extends PageObject {
 
-	private final static String searchButton = ".flights-searchbox__form-flight-data button > span";
-	private final static String radioButtons = "span.mb-radio__mark";
-	private final static String addFlightButton = "#aggregate";
+	@FindBy(css=".flights-searchbox__form-flight-data button > span")
+	WebElement searchButton;
+	
+	@FindBy(css = "[data-au='addTravelDetail'] mb-icon")
+	List <WebElement> addFlightButton;
+	
+	@FindBy(css = "span.mb-radio__mark")
+	List <WebElement> typeOfFlightRadioButtons ;
+	
+	@FindBy(css = "div.flights-searchbox__form-multiple-actions > div:nth-child(1)")
+	WebElement removeFlight;
 
 	private static boolean roundTrip;
 	private boolean oneWayTrip;
 	private boolean multiDestinationTrip;
-	private WebDriver driver;
+public int QTYOfFlights;
 
 	public HomePageObject(WebDriver driver) {
 
-		this.driver = driver;
+		super(driver);
 		setRoundTrip(true);
 		this.oneWayTrip = false;
 		this.multiDestinationTrip = false;
+		this.QTYOfFlights=1;
 
 	}
 
 	public void search() {
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-		wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(searchButton)));
-		driver.findElement(By.cssSelector(searchButton)).click();
+		wait.until(ExpectedConditions.elementToBeClickable(searchButton));
+		searchButton.click();
 	}
 
 	public void selectRoundTrip() {
 
 		if (!isRoundTrip()) {
-			driver.findElements(By.cssSelector(radioButtons)).get(0).click();
+			typeOfFlightRadioButtons.get(0).click();
 			setRoundTrip(true);
 			this.oneWayTrip = false;
 			this.multiDestinationTrip = false;
@@ -45,7 +57,7 @@ public class HomePageObject {
 
 	public void selectOneWayTrip() {
 		if (!this.oneWayTrip) {
-			driver.findElements(By.cssSelector(radioButtons)).get(1).click();
+			typeOfFlightRadioButtons.get(1).click();
 			setRoundTrip(false);
 			this.oneWayTrip = true;
 			this.multiDestinationTrip = false;
@@ -54,7 +66,7 @@ public class HomePageObject {
 
 	public void selectMultiDestinationTrip() {
 		if (!this.multiDestinationTrip) {
-			driver.findElements(By.cssSelector(radioButtons)).get(2).click();
+			typeOfFlightRadioButtons.get(2).click();
 		
 			setRoundTrip(false);
 			this.oneWayTrip = false;
@@ -65,10 +77,32 @@ public class HomePageObject {
 	
 
 	public void addFlight() {
-
-		driver.findElement(By.cssSelector(addFlightButton)).click();
+		
+	
+		
+		for(WebElement icon : addFlightButton ) {
+			
+			
+			if(icon.isDisplayed()) {
+				
+				
+				icon.click();
+			
+				break;
+			}
+			
+		}
+		
+		this.QTYOfFlights++;
+		
 	}
-
+	
+	public void removeFlight() {
+		 
+		 removeFlight.click();
+		 this.QTYOfFlights--;
+		 
+	 }
 	public static boolean isRoundTrip() {
 		return roundTrip;
 	}

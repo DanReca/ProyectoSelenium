@@ -1,20 +1,37 @@
 package PageObjects;
 
-import java.time.Duration;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
+import java.time.Duration;
+import java.util.List;
+
+
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+public class PassengersPageObject extends PageObject{
 
+	@FindBy(css = "#passengers")
+	WebElement passengersField;
 
-public class PassengersPageObject {
+	@FindBy(css = "#sub")
+	List<WebElement> substractPassengerButton;
+
+	@FindBy(css = "#add")
+	List<WebElement> addPassengerButton;
+
+	@FindBy(css = "[data-au='age-child']")
+	List<WebElement> children;
+	
+	@FindBy(css = "am-passengers-dialog button")
+	WebElement okButton;
 
 	public enum Age {
 
-		MinorThan2(0), MajorThan2MinorThan11(1), MajorThan11(2);
+		MinorThan2(1), MajorThan2MinorThan11(2), MajorThan11(3);
 
 		private final int number;
 
@@ -27,30 +44,17 @@ public class PassengersPageObject {
 		}
 	}
 
-	private final String passengers = "#passengers";
-	private final String substract = "#sub";
-	private final String add = "#add";
-	private final String minorAge1 = "#child-0";
-	private final String minorAge2 = "#child-1";
-	private final String minorAge3 = "#child-2";
-	private final String minorAge4 = "#child-3";
-	private final String minorAge5 = "#child-4";
-	private final String minorAge6 = "#child-5";
-	private final String minorAge7 = "#child-6";
-	private final String minorAge8 = "#child-7";
-	private final String minorThanTwo = " > option:nth-child(2)";
-	private final String majTwoMinEleven = " > option:nth-child(3)";
-	private final String majorThanEleven = " > option:nth-child(4)";
-	private final String okButton = "am-passengers-dialog button";
-	private final String minorAge = "div:nth-of-type(3) .selector__content div";
 
-	private WebDriver driver;
+
+	
+
+
 
 	private int childQTY;
 
 	public PassengersPageObject(WebDriver driver) {
 
-		this.driver = driver;
+		super(driver);
 		this.childQTY = 0;
 
 	}
@@ -61,19 +65,13 @@ public class PassengersPageObject {
 
 	}
 
-	private void addChild(Age age) n {
+	private void addChild(Age age) {
 
 		operation(2, true);
 		this.childQTY++;
-		
-	System.out.println(childQTY);
-	
 
-				selectChildAge(childQTY, age.getValue());
-		
-		
-		
-		
+		selectChildAge(childQTY, age);
+
 	}
 
 	private void substractAdult() {
@@ -91,15 +89,15 @@ public class PassengersPageObject {
 
 	private void selectPassengerField() {
 
-		this.driver.findElement(By.cssSelector(this.passengers)).click();
+		passengersField.click();
 
 	}
 
 	private void clickOK() {
-		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-		wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(okButton)));
-		
-		this.driver.findElement(By.cssSelector(this.okButton)).click();
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+		wait.until(ExpectedConditions.elementToBeClickable(okButton));
+
+		okButton.click();
 
 	}
 
@@ -107,105 +105,41 @@ public class PassengersPageObject {
 
 		if (sum) {
 
-			this.driver.findElements(By.cssSelector(this.add)).get(index).click();
+			addPassengerButton.get(index).click();
 		} else {
 
-			this.driver.findElements(By.cssSelector(this.substract)).get(index).click();
+			substractPassengerButton.get(index).click();
 		}
 
 	}
 
-	private void selectChildAge(int numberOfChildField, int age) {
-		
-	
-	
-		String aux;
+	private void selectChildAge(int numberOfChildField, Age age) {
 
-			aux = selectAgeMenu(numberOfChildField);
-			selectAge(aux, age);
-	
+		WebElement aux= selectAgeMenu(numberOfChildField);
+		selectAge(aux, age);
 
 	}
 
-	private String selectAgeMenu(int number) {
-
-		String minorAge = "";
-
-		switch (number) {
-
-		case 1:
-			minorAge = this.minorAge1;
-			break;
-
-		case 2:
-			minorAge = this.minorAge2;
-			
-			break;
-
-		case 3:
-			minorAge = this.minorAge3;
+	private WebElement selectAgeMenu(int number) {
 		
-			break;
-
-		case 4:
-			minorAge = this.minorAge4;
-			
-			break;
-
-		case 5:
-			minorAge = this.minorAge5;
-			
-			break;
-
-		case 6:
-			minorAge = this.minorAge6;
-			
-			break;
-
-		case 7:
-			minorAge = this.minorAge7;
-			
-			break;
-
-		case 8:
-			minorAge = this.minorAge8;
-			
-			break;
-
-		}
-
-		this.driver.findElement(By.cssSelector(minorAge)).click();
-
-		return minorAge;
-	}
-
-	private void selectAge(String field, int age) {
-
-		String selector = "";
-		switch (age) {
-
-		case 0:
-			selector = field + this.minorThanTwo;
+	
 		
-			break;
-
-		case 1:
-			selector = field + this.majTwoMinEleven;
-		
-			break;
-
-		case 2:
-			selector = field + this.majorThanEleven;
-		
-			break;
-
-		}
+		WebElement aux = children.get(number-1);
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-		wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(selector)));
-	
-		this.driver.findElement(By.cssSelector(selector)).click();
-		this.driver.findElement(By.cssSelector("#cdk-overlay-0")).click();
+		wait.until(ExpectedConditions.elementToBeClickable(aux));
 		
+		aux.click();
+
+		return aux;
+
+	}
+
+	private void selectAge(WebElement child, Age age) {
+
+		
+	Select auxSelect =new Select(child);
+		
+		auxSelect.selectByIndex(age.getValue());
 
 	}
 
@@ -250,21 +184,19 @@ public class PassengersPageObject {
 		clickOK();
 
 	}
-	
-	
-	public void addChildPassenger(int qty, Age age []) throws InterruptedException {
+
+	public void addChildPassenger(int qty, Age age[]) throws InterruptedException {
 
 		selectPassengerField();
 
-		for(int i=0; i<qty;i++) {
-			
-		addChild(age[i]);
-		
+		for (int i = 0; i < qty; i++) {
+
+			addChild(age[i]);
+
 		}
 		clickOK();
 
 	}
-	
 
 	public void substractChildPassenger() {
 		selectPassengerField();
@@ -286,14 +218,11 @@ public class PassengersPageObject {
 
 		clickOK();
 	}
-	
-	
+
 	public void modifyChildAge(int childNumber, Age age) {
 		selectPassengerField();
-		selectChildAge(childNumber,age.getValue());
+		selectChildAge(childNumber, age);
 		clickOK();
 	}
-
-	
 
 }

@@ -10,6 +10,7 @@ import PageObjects.CalendarPageObject;
 import PageObjects.ClassPageObject;
 import PageObjects.ClassPageObject.Classes;
 import PageObjects.HomePageObject;
+import PageObjects.PageObject;
 import PageObjects.PassengersPageObject;
 import PageObjects.PassengersPageObject.Age;
 
@@ -23,13 +24,16 @@ public class Flight {
 
 	private PassengersPageObject passenger;
 	private CalendarPageObject date;
-	private AirportPageObject airport;
+	public AirportPageObject airport;
 	private ClassPageObject classes;
-private HomePageObject home;
+public HomePageObject home;
+private FlightExpectedResults exres;
 
 
 	public Flight(WebDriver driver) {
 
+	
+		
 		this.driver = driver;
 
 		this.passenger = new PassengersPageObject(driver);
@@ -37,6 +41,7 @@ private HomePageObject home;
 		this.date = new CalendarPageObject(driver);
 		this.classes = new ClassPageObject(driver);
 		this.home= new HomePageObject(driver);
+		this.exres= new FlightExpectedResults(driver);
 		driver.get("https://almundo.com.ar/");
 		driver.manage().window().maximize();
 
@@ -48,6 +53,13 @@ private HomePageObject home;
 
 	}
 
+	public void selectOrigin(String city) {
+
+		this.airport.setOrigin(city);
+
+	}
+	
+	
 	public void selectDestination(String city, int indexOfFlight) {
 
 		this.airport.setDestination(city, indexOfFlight);
@@ -142,6 +154,18 @@ private HomePageObject home;
 		this.airport.swapAirports(indexOfFlight);
 	}
 	
+	
+	public void swapAirports() {
+		
+		this.airport.swapAirports();
+	}
+	
+	
+	public void removeFlight() {
+		 
+		this.home.removeFlight();
+		 
+	 }
 	
 	public void search() {
 

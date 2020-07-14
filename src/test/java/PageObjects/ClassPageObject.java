@@ -4,12 +4,18 @@ import java.time.Duration;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 
 
-public class ClassPageObject {
+public class ClassPageObject extends PageObject {
+	
+	
+	@FindBy(css = "#classes")
+	WebElement classField;
 	
 	public enum Classes{
 		
@@ -32,16 +38,13 @@ public class ClassPageObject {
 	}
 
 	
-	
 
-	 private WebDriver driver;
-	 private final String classField="#classes";;
 
 
 	 
 	 public ClassPageObject(WebDriver driver ) {
 		 
-		 this.driver=driver;
+		super(driver);
 		
 		
 		 
@@ -50,7 +53,7 @@ public class ClassPageObject {
 	 
 	 private void SelectAClass(String typeOfClass) {
 		 
-		 driver.findElement(By.cssSelector(this.classField)).click();
+		 classField.click();
 		 WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
 		 wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(typeOfClass)));
 		 this.driver.findElement(By.cssSelector(typeOfClass)).click();

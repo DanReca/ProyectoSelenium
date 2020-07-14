@@ -12,7 +12,7 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class CalendarPageObject {
+public class CalendarPageObject extends PageObject {
 
 	@FindBy(css = "#departure-date")
 	WebElement departureDateFieldRoundTrip;
@@ -66,14 +66,14 @@ public class CalendarPageObject {
 		}
 	}
 
-	private WebDriver driver;
+
 	private boolean undefinedDate;
 
 	public CalendarPageObject(WebDriver driver) {
 
-		this.driver = driver;
+		super(driver);
 		this.undefinedDate = false;
-		PageFactory.initElements(driver, this);
+		
 
 	}
 
