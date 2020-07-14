@@ -29,17 +29,23 @@ public class CalendarPageObject extends PageObject {
 	@FindBys(@FindBy(css = ".mb-calendar-body__btn"))
 	List<WebElement> fullMonthButtons;
 
-	@FindBys(@FindBy(css = ".calendar-range-view__page:nth-of-type(1) .mb-calendar-body__btn"))
-	List<WebElement> fullMonthButtonsRoundTrip;
-
 	@FindBy(css = "mb-range-month-view .mb-calendar-header__next")
 	WebElement nextButtonRoundTrip;
 
 	@FindBy(css = "mb-range-month-view .mb-calendar-header__prev")
 	WebElement prevButtonRoundTrip;
 
+	@FindBys(@FindBy(css = ".calendar-range-view__page:nth-of-type(1) .mb-calendar-body__btn"))
+	List<WebElement> fullMonthButtonsRoundTripLeft;
+
+	@FindBys(@FindBy(css = ".calendar-range-view__page:nth-of-type(2) .mb-calendar-body__btn"))
+	List<WebElement> fullMonthButtonsRoundTripRight;
+	
 	@FindBy(css = "mb-range-month-view :nth-child(1) > mb-calendar-header")
 	WebElement leftHeaderRoundTrip;
+
+	@FindBy(css = "mb-range-month-view :nth-child(2) > mb-calendar-header")
+	WebElement rightHeaderRoundTrip;
 
 	@FindBy(css = ".mb-calendar-header__next")
 	WebElement nextButton;
@@ -66,15 +72,14 @@ public class CalendarPageObject extends PageObject {
 		}
 	}
 
-
 	private boolean undefinedDate;
+	private boolean calendarLeftPosition;
 
 	public CalendarPageObject(WebDriver driver) {
 
 		super(driver);
 		this.undefinedDate = false;
-		
-
+this.calendarLeftPosition=true;
 	}
 
 	public Calendar setDate(int days) {
@@ -87,29 +92,20 @@ public class CalendarPageObject extends PageObject {
 
 		departureOrArrival.get(indexOfFlight).click();
 
-		obtainDateOfHeader(c);
+		findDate(c);
 	}
 
 	private void selectDate(Calendar c, WebElement departureOrArrival) {
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
 		wait.until(ExpectedConditions.elementToBeClickable(departureOrArrival));
 		departureOrArrival.click();
-		obtainDateOfHeader(c);
+		findDate(c);
 	}
 
-	private void obtainDateOfHeader(Calendar c) {
+	private void findDate(Calendar c){
 
-		WebElement auxHeader = header;
-
-		if (HomePageObject.isRoundTrip()) {
-
-			auxHeader = leftHeaderRoundTrip;
-		}
-
-		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-		wait.until(ExpectedConditions.elementToBeClickable(auxHeader));
 		findYear(c);
-		findMonth(c);
+      findMonth(c);
 		findDay(c);
 	}
 
@@ -139,26 +135,45 @@ public class CalendarPageObject extends PageObject {
 		selectDate(c, arrivalDateFieldRoundTrip);
 
 	}
+	
 
-	private void findCalendarPosition(String strObjectCalendar, int objectCalendar, int headerCalendar) {
+	private void findCalendarPosition(String strObjectCalendar, int objectCalendar, int[] headerCalendar)  {
 
+		
+		
+		
+		
 		WebElement auxHeader = header;
+		WebElement auxHeaderII = null;
 		WebElement auxPrevButton = prevButton;
 		WebElement auxNextButton = nextButton;
+        
 
 		if (HomePageObject.isRoundTrip()) {
 
 			auxHeader = leftHeaderRoundTrip;
+			auxHeaderII = rightHeaderRoundTrip;
 			auxPrevButton = prevButtonRoundTrip;
 			auxNextButton = nextButtonRoundTrip;
 		}
 
 		String strHeader = auxHeader.getText();
+		String strHeaderII = "";
+
+		if (auxHeaderII != null) {
+
+			strHeaderII = auxHeaderII.getText();
+
+		}
+
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
 
-		while (!(strHeader.contains(strObjectCalendar))) {
+		while (!(strHeader.contains(strObjectCalendar)) && !(strHeaderII.contains(strObjectCalendar))) {
+			
+			
+			if (objectCalendar > headerCalendar[0]
+					|| (HomePageObject.isRoundTrip() && objectCalendar > headerCalendar[1])) {
 
-			if (objectCalendar > headerCalendar) {
 				wait.until(ExpectedConditions.elementToBeClickable(auxNextButton));
 				auxNextButton.click();
 
@@ -170,17 +185,37 @@ public class CalendarPageObject extends PageObject {
 			}
 			wait.until(ExpectedConditions.elementToBeClickable(auxHeader));
 			strHeader = auxHeader.getText();
+
+			if (HomePageObject.isRoundTrip()) {
+
+				wait.until(ExpectedConditions.elementToBeClickable(auxHeaderII));
+				strHeaderII = auxHeaderII.getText();
+
+			}
+
 		}
+		
+		if (HomePageObject.isRoundTrip()&& strHeaderII.contains(strObjectCalendar)) {
+			
+			
+			this.calendarLeftPosition=false;
+			
+		} else {
+			
+			
+			this.calendarLeftPosition=true;
+		}
+		
 
 	}
 
-	private void findYear(Calendar c) {
+	private void findYear(Calendar c)  {
 
 		// obtain c's year
 		int yearOfObjectCalendar = c.get(Calendar.YEAR);
 		String strYearOfObjectCalendar = Integer.toString(yearOfObjectCalendar);
 
-		int yearOfCalendarHeader = getYearOfHeader();
+		int[] yearOfCalendarHeader = getYearOfHeader();
 
 		findCalendarPosition(strYearOfObjectCalendar, yearOfObjectCalendar, yearOfCalendarHeader);
 
@@ -192,53 +227,92 @@ public class CalendarPageObject extends PageObject {
 
 		String strMonthOfObjectCalendar = getMonthFromInt(monthOfObjectCalendar).toUpperCase();
 
-		int monthOfCalendarHeader = getMonthOfHeader();
+		int[] monthOfCalendarHeader = getMonthOfHeader();
 
 		findCalendarPosition(strMonthOfObjectCalendar, monthOfObjectCalendar, monthOfCalendarHeader);
 
 	}
 
-	private int getMonthOfHeader() {
+	private int[] getMonthOfHeader() {
 
 		WebElement auxHeader = header;
+		WebElement auxHeaderRight = null;
+		int[] monthOfHeader;
+		String strHeader;
+		int aux;
+		String strMonthOfHeader;
+		Month enume;
 
 		if (HomePageObject.isRoundTrip()) {
-
+			monthOfHeader = new int[2];
 			auxHeader = leftHeaderRoundTrip;
+			auxHeaderRight = rightHeaderRoundTrip;
+
+			strHeader = auxHeaderRight.getText();
+// obtain last index of the month
+			aux = strHeader.indexOf("2") - 2;
+
+// obtain month of the header
+			strMonthOfHeader = strHeader.substring(0, aux + 1);
+
+			enume = Month.valueOf(strMonthOfHeader);
+			monthOfHeader[1] = enume.getValue();
+
+		} else {
+
+			monthOfHeader = new int[1];
 
 		}
 
-		String strHeader = auxHeader.getText();
+		strHeader = auxHeader.getText();
 		// obtain last index of the month
-		int aux = strHeader.indexOf("2") - 2;
+		aux = strHeader.indexOf("2") - 2;
 
 		// obtain month of the header
-		String strMonthOfHeader = strHeader.substring(0, aux + 1);
+		strMonthOfHeader = strHeader.substring(0, aux + 1);
 
-		Month enume = Month.valueOf(strMonthOfHeader);
-		int monthOfHeader = enume.getValue();
+		enume = Month.valueOf(strMonthOfHeader);
+		monthOfHeader[0] = enume.getValue();
 
 		return monthOfHeader;
 
 	}
 
-	private int getYearOfHeader() {
+	private int[] getYearOfHeader() {
 
 		WebElement auxHeader = header;
+		WebElement auxHeaderRight = null;
+		int[] yearOfHeader;
+		String strHeader;
+		int aux;
+		String strYearOfHeader;
 
 		if (HomePageObject.isRoundTrip()) {
-
+			yearOfHeader = new int[2];
 			auxHeader = leftHeaderRoundTrip;
+			auxHeaderRight = rightHeaderRoundTrip;
+
+			strHeader = auxHeaderRight.getText();
+// obtain index of the first number of the year
+			aux = strHeader.indexOf("2");
+
+// obtain year of the header
+			strYearOfHeader = strHeader.substring(aux, aux + 4);
+			yearOfHeader[1] = Integer.parseInt(strYearOfHeader);
+
+		} else {
+
+			yearOfHeader = new int[1];
 
 		}
 
-		String strHeader = auxHeader.getText();
+		strHeader = auxHeader.getText();
 		// obtain index of the first number of the year
-		int aux = strHeader.indexOf("2");
+		aux = strHeader.indexOf("2");
 
 		// obtain year of the header
-		String strYearOfHeader = strHeader.substring(aux, aux + 4);
-		int yearOfHeader = Integer.parseInt(strYearOfHeader);
+		strYearOfHeader = strHeader.substring(aux, aux + 4);
+		yearOfHeader[0] = Integer.parseInt(strYearOfHeader);
 
 		return yearOfHeader;
 	}
@@ -249,21 +323,27 @@ public class CalendarPageObject extends PageObject {
 
 	}
 
+
 	private void findDay(Calendar c) {
 
 		int day = c.get(Calendar.DAY_OF_MONTH);
 
 		List<WebElement> auxFullMonthButtons = fullMonthButtons;
 
-		if (HomePageObject.isRoundTrip()) {
+		if (HomePageObject.isRoundTrip()&&this.calendarLeftPosition) {
 
-			auxFullMonthButtons = fullMonthButtonsRoundTrip;
+			auxFullMonthButtons = fullMonthButtonsRoundTripLeft;
+		} else if (HomePageObject.isRoundTrip()){
+			
+			
+			auxFullMonthButtons = fullMonthButtonsRoundTripRight;
 		}
-
+	
 		auxFullMonthButtons.get(day - 1).click();
 
 	}
-	
+
+
 
 	public void exploreWithoutDate(boolean b) {
 
@@ -273,7 +353,6 @@ public class CalendarPageObject extends PageObject {
 		}
 	}
 
-	
 	private void clickCheckBoxDestinaton() {
 
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));

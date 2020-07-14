@@ -3,49 +3,68 @@ package test;
 import java.util.Calendar;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.WebDriver;
+
+import Flights.Flight;
+import Flights.FlightExpectedResults;
+import WebDriverFactory.DriverFactory;
+import WebDriverFactory.DriverFactory.DriverType;
 
 
 
 public class Test4 {
+	
+	
 	/*
-	 * Flight homepage; Calendar c;
+	 * Flight f; WebDriver driver;
 	 * 
 	 * @Before public void before() {
 	 * 
+	 * driver = DriverFactory.getDriver(DriverType.CHROME);
 	 * 
-	 * homepage = new Flight();
-	 * 
-	 * c= Calendar.getInstance(); c.add(Calendar.MONTH, 1);
+	 * f = new Flight(driver);
 	 * 
 	 * }
-	 * 
 	 * 
 	 * @Test public void test() throws InterruptedException {
 	 * 
-	 * 
-	 * homepage.selectOrigin("Londres"); homepage.selectDestination("Brasil");
-	 * homepage.selectDepartureDate(c); c.add(Calendar.DAY_OF_MONTH, 32);
-	 * homepage.selectArrivalDate(c); homepage.addAdultPassenger(2);
-	 * homepage.addChildPassenger(Age.MinorThan2); homepage.modifyChildAge(1,
-	 * Age.MajorThan11);
-	 * 
-	 * homepage.selectAClass(Classes.Turista); homepage.search();
+	 * f.selectOrigin("Londres", 0); f.selectDestination("Brasil", 0);
 	 * 
 	 * 
 	 * 
+	 * 
+	 * 
+	 * f.selectDepartureDate(207,0);
+	 * 
+	 * 
+	 * 
+	 * f.selectArrivalDate(208);
+	 * 
+	 * 
+	 * 
+	 * f.selectClass(PageObjects.ClassPageObject.Classes.Business);
+	 * 
+	 * f.search();
 	 * 
 	 * 
 	 * 
 	 * }
 	 * 
+	 * @After public void close() { f.close();
 	 * 
-	 * 
-	 * 
-	 * @After public void close() {
-	 * 
-	 * 
-	 * homepage.close() ; }
+	 * }
 	 */
-}
+	  
+	  
+	  }
+	  
+	  
+	  
+	  
+	  
+
+	 
+

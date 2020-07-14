@@ -175,7 +175,7 @@ public class PassengersPageObject extends PageObject{
 		}
 	}
 
-	public void addChildPassenger(Age age) throws InterruptedException {
+	public void addChildPassenger(Age age){
 
 		selectPassengerField();
 
@@ -185,7 +185,7 @@ public class PassengersPageObject extends PageObject{
 
 	}
 
-	public void addChildPassenger(int qty, Age age[]) throws InterruptedException {
+	public void addChildPassenger(int qty, Age age[])  {
 
 		selectPassengerField();
 

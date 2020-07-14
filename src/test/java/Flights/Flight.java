@@ -72,7 +72,7 @@ private FlightExpectedResults exres;
 
 	}
 
-	public void selectDepartureDate(int days, int indexOfFlight) {
+	public void selectDepartureDate(int days, int indexOfFlight){
 
 		this.date.selectDepartureDate(days, indexOfFlight);
 
@@ -120,12 +120,12 @@ private FlightExpectedResults exres;
 	}
 
 
-	public void addChildPassenger(Age age) throws InterruptedException {
+	public void addChildPassenger(Age age)  {
 		this.passenger.addChildPassenger(age);
 
 	}
 	
-	public void addChildPassenger(int qty, Age [] age) throws InterruptedException {
+	public void addChildPassenger(int qty, Age [] age)  {
 		
 		this.passenger.addChildPassenger(qty, age);
 
