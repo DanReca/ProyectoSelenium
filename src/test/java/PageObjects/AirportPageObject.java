@@ -100,7 +100,7 @@ public class AirportPageObject extends PageObject {
 		
 		String aux;
 		String[] auxiliar;
-	String[] airports = new String[f.home.QTYOfFlights+1];
+		String[] airports = new String[f.home.QTYOfFlights+1];
 
 	int i=1;
 	

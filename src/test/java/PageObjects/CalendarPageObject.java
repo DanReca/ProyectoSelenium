@@ -140,9 +140,6 @@ this.calendarLeftPosition=true;
 	private void findCalendarPosition(String strObjectCalendar, int objectCalendar, int[] headerCalendar)  {
 
 		
-		
-		
-		
 		WebElement auxHeader = header;
 		WebElement auxHeaderII = null;
 		WebElement auxPrevButton = prevButton;

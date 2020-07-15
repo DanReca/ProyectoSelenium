@@ -13,7 +13,7 @@ import PageObjects.PageObject;
 
 public class FlightExpectedResults extends PageObject {
 
-	@FindBy(css = "#breadcrum > mb-breadcrumbs > div")
+	@FindBy(css = "mb-breadcrumbs")
 	static WebElement selectedFlights;
 	
 	@FindBy(css ="mb-alert")
@@ -39,6 +39,7 @@ public class FlightExpectedResults extends PageObject {
 		wait.until(ExpectedConditions.textToBePresentInElement(selectedFlights, "Home"));
 
 		String txtObtained = selectedFlights.getText();
+	
 		String[] txtExpected = { "Home", "Vuelos", "de", "a" };
 		String[] airports = f.airport.obtainAirportsEntered(f);
 
@@ -67,7 +68,8 @@ public class FlightExpectedResults extends PageObject {
 	
 	
 	public static boolean notificationIsShown() {
-		
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+		wait.until(ExpectedConditions.textToBePresentInElement(notFlightsAvailable, "No tenemos vuelos"));
 	
 		String aux= notFlightsAvailable.getText();
 		return aux.contains("No tenemos vuelos disponibles");
